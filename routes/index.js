@@ -17,14 +17,20 @@ router.post('/ingress',function(req,res) {
     	var links = [
 			{area: "EC", link:""},
 			{area: "IB", link:""},
-			{area: "PB", link:""},
+			{area: "PB", link:"https://www.ingress.com/intel?ll=32.791077,3122.712924&z=13"},
 			{area: "MMB", link:""}
 		];
 		var area = hook.text.split(' ')[1];
-
+		var link = "";
+		for (var i = 0; i<links.length; i++) {
+			if (links[i].area == area.toUpperCase()) {
+				link = links[i].link;
+				break;
+			}
+		}
 
         return {
-            text: 'Area = ' + area,
+            text: link,
             username: hook.trigger_word
         };
     });
