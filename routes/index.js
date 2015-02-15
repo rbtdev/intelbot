@@ -25,7 +25,7 @@ router.post('/ingress',function(req,res) {
 		if (input.length > 1) {
 			var command = input[1];
 			switch (command) {
-				case "help"
+				case "help":
 					response = "Help text goes here";
 				break;
 				case "add":
