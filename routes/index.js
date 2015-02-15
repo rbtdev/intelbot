@@ -14,8 +14,17 @@ router.get('/ingress', function (req,res) {
 
 router.post('/ingress',function(req,res) {
     var reply = slack.respond(req.body,function(hook) {
+    	var links = [
+			{area: "EC", link:""},
+			{area: "IB", link:""},
+			{area: "PB", link:""},
+			{area: "MMB", link:""}
+		];
+		var area = hook.text.split(' ')[1];
+
+
         return {
-            text: 'You said "' + hook.text + '"',
+            text: 'Area = ' + area,
             username: hook.trigger_word
         };
     });
