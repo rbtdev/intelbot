@@ -15,8 +15,8 @@ router.get('/ingress', function (req,res) {
 router.post('/ingress',function(req,res) {
     var reply = slack.respond(req.body,function(hook) {
         return {
-            text: 'Good point, ' + hook.user_name,
-            username: 'Bot'
+            text: 'You said "' + hook.text + '"',
+            username: hook.trigger_word
         };
     });
     res.json(reply);
