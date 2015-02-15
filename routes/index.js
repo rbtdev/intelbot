@@ -41,7 +41,7 @@ router.post('/ingress',function(req,res) {
 				default:
 					response = "Area not found";
 					for (var i = 0; i<links.length; i++) {
-						if (links[i].area == input[1] {
+						if (links[i].area == input[1]) {
 							response = links[i].link;
 							break;
 						}
