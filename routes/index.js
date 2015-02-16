@@ -20,7 +20,13 @@ var parse = function (hook) {
 
 		switch (command) {
 			case "help":
-				response = "Help text goes here";
+				response = "Welcome to the Ingress Intel Link Bot (beta)\n";
+				response += "The following commands are now available:\n";
+				response += "@intel list - dispays a list of available areas\n";
+				response += "@intel <area> - displays the intel link for the specified area\n";
+				response += "Comming soon:\n"
+				response += "@intel add <area> <name> <link> - adds an area to the list of available areas. Admins only.\n";
+				response += "Working on displaying a screenshot of the specified area along with the link.";
 			break;
 			case "list":
 				response = "";
