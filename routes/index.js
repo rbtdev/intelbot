@@ -10,7 +10,8 @@ var parse = function (hook) {
 		{area: "ec", name: "El Cajon", link:"https://www.ingress.com/intel?ll=32.794636,-116.962298&z=15"},
 		{area: "ib", name: "Imperial Beach", link:"https://www.ingress.com/intel?ll=32.579815,-117.117755&z=15"},
 		{area: "pb", name: "Pacific Beach", link:"https://www.ingress.com/intel?ll=32.797829,-117.242793&z=14"},
-		{area: "mmb", name: "Mira Mesa Blvd", link:"https://www.ingress.com/intel?ll=32.907638,-117.153504&z=14"}
+		{area: "mmb", name: "Mira Mesa Blvd", link:"https://www.ingress.com/intel?ll=32.907638,-117.153504&z=14"},
+		{area: "gdp", name: "Grape Day Park", link:"https://www.ingress.com/intel?ll=33.12255,-117.085275&z=17"}
 	];
 	var input = text.toLowerCase().split(' ');
 	console.log('array = ' + JSON.stringify(input))
