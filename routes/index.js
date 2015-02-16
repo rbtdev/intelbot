@@ -298,7 +298,7 @@ var links =[
 
     return {
         text: response,
-        atachments: attachment
+        atachments: attachments
         //username: hook.trigger_word
     };
 }
