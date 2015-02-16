@@ -269,7 +269,7 @@ var links =[
 				response = "Area not found";
 				var name = commandLine.substr(commandLine.indexOf(" ") + 1);
 				for (var i = 0; i<links.length; i++) {
-					if (links[i].name == area) {
+					if (links[i].name.toLowerCase() == name) {
 						response = links[i].intelUrl;
 						break;
 					}
