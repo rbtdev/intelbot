@@ -262,7 +262,8 @@ var links =[
 				attachment = {
     				fallback: "List of available locations",
     				title: "List of available locations",
-   					text: "",
+   					text: ""
+   				}
 				for (var i = 0; i<links.length; i++) {
 					attachment.text += links[i].name.toUpperCase() + " - " + "<"+ links[i].intelUrl + "|" + links[i].name  + ">\n"
 				}
