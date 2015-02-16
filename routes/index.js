@@ -29,7 +29,7 @@ var parse = function (hook) {
 					response = "Adding " + newArea + " " + newLink;
 				}
 				else {
-					response = "please include an area and link";
+					response = "Please include an area and link";
 				}
 			break;
 			default:
@@ -46,7 +46,7 @@ var parse = function (hook) {
 	}
 
     return {
-        text: "Intel link for area '" + response,
+        text: response,
         //username: hook.trigger_word
     };
 }
