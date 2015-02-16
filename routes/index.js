@@ -252,20 +252,20 @@ var links =[
 	var input = commandLine.toLowerCase().split(' ');
 	console.log('array = ' + JSON.stringify(input))
 	var response = "Default response";
-	var attachment = null;
+	var attachments = null;
 	if (input.length > 0) {
 		var command = input[0];
 
 		switch (command) {
 			case "list":
 				response = "List of available locations:";
-				attachment = {
+				attachments = [{
     				fallback: "List of available locations",
     				title: "List of available locations",
    					text: ""
-   				}
+   				}]
 				for (var i = 0; i<links.length; i++) {
-					attachment.text += links[i].name.toUpperCase() + " - " + "<"+ links[i].intelUrl + "|" + links[i].name  + ">\n"
+					attachments[0].text += links[i].name.toUpperCase() + " - " + "<"+ links[i].intelUrl + "|" + links[i].name  + ">\n"
 				}
 				
 			break;
