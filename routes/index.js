@@ -9,7 +9,7 @@ var parse = function (hook) {
 	var links = [
 		{area: "ec", link:""},
 		{area: "ib", link:""},
-		{area: "pb", link:"https://www.ingress.com/intel?ll=32.791077,3122.712924&z=13"},
+		{area: "pb", link:"https://www.ingress.com/intel?ll=32.800169,-117.237747&z=14"},
 		{area: "mmb", link:""}
 	];
 	var input = text.toLowerCase().split(' ');
