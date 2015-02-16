@@ -189,7 +189,7 @@ var links =[
     "mapsUrl":"http://maps.google.com/?q=Old Town@32.754574,-117.197168"
   },
   {
-    "name":"Tony Romas ",
+    "name":"Tony Romas",
     "area":"Pacific Beach",
     "intelUrl":"https://www.ingress.com/intel?ll=32.791029,-117.253911&z=17&pll=32.791029,-117.253911",
     "mapsUrl":"http://maps.google.com/?q=Tony Romas @32.791029,-117.253911"
@@ -252,15 +252,21 @@ var links =[
 	var input = commandLine.toLowerCase().split(' ');
 	console.log('array = ' + JSON.stringify(input))
 	var response = "Default response";
+	var attachment = null;
 	if (input.length > 0) {
 		var command = input[0];
 
 		switch (command) {
 			case "list":
-				response = "";
+				response = "List of available locations:";
+				attachment = {
+    				fallback: "List of available locations",
+    				title: "List of available locations",
+   					text: "",
 				for (var i = 0; i<links.length; i++) {
-					response += links[i].name.toUpperCase() + " - " + "<"+ links[i].intelUrl + "|" + links[i].name  + ">\n"
+					attachment.text += links[i].name.toUpperCase() + " - " + "<"+ links[i].intelUrl + "|" + links[i].name  + ">\n"
 				}
+				
 			break;
 			case "add":
 				response = "Comming soon.";
@@ -291,6 +297,7 @@ var links =[
 
     return {
         text: response,
+        atachments: attachment
         //username: hook.trigger_word
     };
 }
