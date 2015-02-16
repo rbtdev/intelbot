@@ -265,7 +265,7 @@ var links =[
    					text: ""
    				}]
 				for (var i = 0; i<links.length; i++) {
-					attachments[0].text += links[i].name.toUpperCase() + " - " + "<"+ links[i].intelUrl + "|" + links[i].name  + ">\n"
+					attachments[0].text += "<"+ links[i].intelUrl + "|" + links[i].name  + ">" + " - " + links[i].area + "\n";
 				}
 				
 			break;
