@@ -25,7 +25,7 @@ var parse = function (hook) {
 			case "list":
 				response = "";
 				for (var i = 0; i<links.length; i++) {
-					response += links[i].area.toUpperCase() + " - " + links[i].name + "\n"
+					response += links[i].area.toUpperCase() + " - " + "<a href = " + links[i].link + ">" + links[i].name + "</a>" + "\n"
 				}
 			break;
 			case "add":
