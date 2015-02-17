@@ -259,13 +259,11 @@ var links =[
 		switch (command) {
 			case "list":
 				response = "List of available locations:";
-				attachments = [{
-    				fallback: "List of available locations",
-    				title: "List of available locations",
-   					text: ""
-   				}]
+				attachments = [];
 				for (var i = 0; i<links.length; i++) {
-					attachments[i].text += "<"+ links[i].intelUrl + "|" + links[i].name  + ">" + " - " + links[i].area + "\n";
+					attachments[i].fallback = links[i].name;
+					attachments[i].text = links[i].area;
+					attachments[i].title += "<"+ links[i].intelUrl + "|" + links[i].name  + ">";
 				}
 				
 			break;
