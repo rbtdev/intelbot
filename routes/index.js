@@ -263,8 +263,8 @@ var links =[
 				for (var i = 0; i<links.length; i++) {
 					var attachment = {};
 					attachment.fallback = links[i].name;
-					attachment.text = links[i].area;
-					attachment.title += "<"+ links[i].intelUrl + "|" + links[i].name  + ">";
+					attachment.text = links[i].area + "<" + links[i].mapUrl + "|Google Map>";
+					attachment.title = "<"+ links[i].intelUrl + "|" + links[i].name  + ">";
 					attachments.push(attachment);
 				}
 				
