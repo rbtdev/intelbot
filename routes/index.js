@@ -252,7 +252,7 @@ var links =[
 	var input = commandLine.toLowerCase().split(' ');
 	console.log('array = ' + JSON.stringify(input))
 	var response = "Default response";
-	var attachments = []];
+	var attachments = [];
 	if (input.length > 0) {
 		var command = input[0];
 
