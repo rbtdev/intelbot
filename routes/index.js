@@ -261,9 +261,11 @@ var links =[
 				response = "List of available locations:";
 				attachments = [];
 				for (var i = 0; i<links.length; i++) {
-					attachments[i].fallback = links[i].name;
-					attachments[i].text = links[i].area;
-					attachments[i].title += "<"+ links[i].intelUrl + "|" + links[i].name  + ">";
+					var attachment = {};
+					attachment.fallback = links[i].name;
+					attachment.text = links[i].area;
+					attachment.title += "<"+ links[i].intelUrl + "|" + links[i].name  + ">";
+					attachments.push(attachment);
 				}
 				
 			break;
