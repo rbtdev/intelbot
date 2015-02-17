@@ -262,8 +262,8 @@ var links =[
 				for (var i = 0; i<links.length; i++) {
 					var attachment = {};
 					attachment.fallback = links[i].name;
-					attachment.text = links[i].area + "   <" + links[i].mapsUrl + "|Google Map>";
-					attachment.title = "<"+ links[i].intelUrl + "|" + links[i].name  + ">";
+					attachment.text =  "<"+ links[i].intelUrl + "|Intel Map>" + "   <" + links[i].mapsUrl + "|Google Map>";
+					attachment.title = links[i].name + " - " + links[i].area;
 					attachments.push(attachment);
 				}
 				
