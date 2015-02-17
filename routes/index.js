@@ -4,7 +4,7 @@ var Slack = require('node-slack');
 var slack = new Slack("rbtdev.slack.com","0h7pWGuvbTDZGaO3pRNBcSKP");
 
 var parse = function (hook) {
-	var text = hook.text;
+	var text = hook.text.toLowerCase();
 	var commandLine = text.substr(text.indexOf(" ") + 1);
 	console.log('input = ' + text)
 var links =[
@@ -249,7 +249,7 @@ var links =[
     "mapsUrl":"http://maps.google.com/?q=Vista Village@33.202468,-117.241979"
   }
 ];
-	var input = commandLine.toLowerCase().split(' ');
+	var input = commandLine.split(' ');
 	console.log('array = ' + JSON.stringify(input))
 	var response = "Default response";
 	var attachments = [];
