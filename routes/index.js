@@ -41,8 +41,8 @@ var parse = function (hook) {
 						response = "Results with '" + searchText + "'";
 						var attachment = {};
 						attachment.fallback = links[i].name;
-						attachment.text = links[i].name + " - " + links[i].area;
-						attachment.title = "<"+ links[i].intelUrl + "|Intel Map>" + "   <" + links[i].mapsUrl + "|Google Map>";
+						attachment.title = links[i].name + " - " + links[i].area;
+						attachment.text = "<"+ links[i].intelUrl + "|Intel Map>" + "   <" + links[i].mapsUrl + "|Google Map>";
 						attachments.push(attachment);
 					}
 				}
