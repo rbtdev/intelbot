@@ -252,14 +252,13 @@ var links =[
 	var input = commandLine.toLowerCase().split(' ');
 	console.log('array = ' + JSON.stringify(input))
 	var response = "Default response";
-	var attachments = null;
+	var attachments = []];
 	if (input.length > 0) {
 		var command = input[0];
 
 		switch (command) {
 			case "list":
 				response = "List of available locations:";
-				attachments = [];
 				for (var i = 0; i<links.length; i++) {
 					var attachment = {};
 					attachment.fallback = links[i].name;
