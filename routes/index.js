@@ -276,7 +276,7 @@ var links =[
 				var name = commandLine.substr(commandLine.indexOf(" ") + 1);
 				for (var i = 0; i<links.length; i++) {
 					if (links[i].name.toLowerCase() == name) {
-						response = "";
+						response = links[i].name;
 						var attachment = {};
 						attachment.fallback = links[i].name;
 						attachment.text = links[i].area + "   <" + links[i].mapsUrl + "|Google Map>";
