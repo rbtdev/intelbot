@@ -38,13 +38,12 @@ var parse = function (hook) {
 					var linkText = links[i].name + " " + links[i].area;
 					console.log("search for: '" + searchText + "' in '" + linkText);
 					if (linkText.toLowerCase().search(searchText) > -1) {
-						response = links[i].name;
+						response = "Results with '" + searchText + "'";
 						var attachment = {};
 						attachment.fallback = links[i].name;
-						attachment.text = links[i].area;
+						attachment.text = links[i].name + " - " + links[i].area;
 						attachment.title = "<"+ links[i].intelUrl + "|Intel Map>" + "   <" + links[i].mapsUrl + "|Google Map>";
 						attachments.push(attachment);
-						break;
 					}
 				}
 			break;
