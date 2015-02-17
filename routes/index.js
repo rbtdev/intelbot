@@ -279,8 +279,8 @@ var links =[
 						response = links[i].name;
 						var attachment = {};
 						attachment.fallback = links[i].name;
-						attachment.text = links[i].area 
-						attachment.title = "<"+ links[i].intelUrl + "|Intel Map>" + "   <" + links[i].mapsUrl + "|Google Map>";";
+						attachment.text = links[i].area;
+						attachment.title = "<"+ links[i].intelUrl + "|Intel Map>" + "   <" + links[i].mapsUrl + "|Google Map>";
 						attachments.push(attachment);
 						break;
 					}
