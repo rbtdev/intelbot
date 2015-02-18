@@ -1,10 +1,20 @@
 var express = require('express');
 var router = express.Router();
 var Slack = require('node-slack');
-var links = require('../data/links')
+var data = require('../data/links')
 var slack = new Slack("rbtdev.slack.com","0h7pWGuvbTDZGaO3pRNBcSKP");
 
-var parse = function (hook) {
+var links = data.data
+
+var Attachment = function (link) {
+	this.fallback = links[i].name;
+	this.text =  "<"+ links[i].intelUrl + "|Intel Map>" + "   <" + links[i].mapsUrl + "|Google Map>";
+	this.title = links[i].name + " - " + links[i].area;
+};
+
+
+
+var processHook = function (hook) {
 	var text = hook.text.toLowerCase();
 	var commandLine = text.substr(text.indexOf(" ") + 1);
 	console.log('input = ' + text)
@@ -19,14 +29,7 @@ var parse = function (hook) {
 		switch (command) {
 			case "list":
 				response = "List of available locations:";
-				for (var i = 0; i<links.length; i++) {
-					var attachment = {};
-					attachment.fallback = links[i].name;
-					attachment.text =  "<"+ links[i].intelUrl + "|Intel Map>" + "   <" + links[i].mapsUrl + "|Google Map>";
-					attachment.title = links[i].name + " - " + links[i].area;
-					attachments.push(attachment);
-				}
-				
+				attachments = data.find(links, null);
 			break;
 			case "add":
 				response = "Comming soon.";
@@ -34,17 +37,9 @@ var parse = function (hook) {
 			case "find":
 				response = "Area not found";
 				var searchText = commandLine.substr(commandLine.indexOf(" ") + 1);
-				for (var i = 0; i<links.length; i++) {
-					var linkText = links[i].name + " " + links[i].area;
-					console.log("search for: '" + searchText + "' in '" + linkText);
-					if (linkText.toLowerCase().search(searchText) > -1) {
-						response = "Results with '" + searchText + "'";
-						var attachment = {};
-						attachment.fallback = links[i].name;
-						attachment.title = links[i].name + " - " + links[i].area;
-						attachment.text = "<"+ links[i].intelUrl + "|Intel Map>" + "   <" + links[i].mapsUrl + "|Google Map>";
-						attachments.push(attachment);
-					}
+				attachments = data.find(links, searchText);
+				if (attachments.length > 0) {
+					response = "Results with '" + searchText + "'";
 				}
 			break;
 			default:
@@ -81,7 +76,7 @@ router.get('/ingress', function (req,res) {
 });
 
 router.post('/ingress',function(req,res) {
-    var reply = slack.respond(req.body,parse);
+    var reply = slack.respond(req.body,processHook);
     res.json(reply);
 });
 

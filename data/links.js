@@ -1,4 +1,24 @@
-var links =[
+exports.find = function (links, searchText) {
+  var attachments = [];
+  for (var i = 0; i<links.length; i++) {
+    var linkText = links[i].name + " " + links[i].area;
+    console.log("search for: '" + searchText + "' in '" + linkText);
+    if (searchText) {
+      if (linkText.toLowerCase().search(searchText) > -1) {
+        var attachment = new Attachment(link)
+        attachments.push(attachment);
+      }
+    }
+    else {
+      var attachment = new Attachment(link);
+      attachments.push(attachment);     
+    }
+  }
+  return attachments;
+};
+
+
+exports.data =[
   {
     "name":"International Houses",
     "area":"Balboa Park",
@@ -240,5 +260,3 @@ var links =[
     "mapsUrl":"http://maps.google.com/?q=Vista Village@33.202468,-117.241979"
   }
 ];
-
-module.exports = links;
