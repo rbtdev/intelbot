@@ -19,8 +19,7 @@ router.get('/', function(req, res) {
 router.get('/ingress', function (req,res) {
 	console.log('processing command...');
 	var hook = {text: req.param('text')}
-	var reply = processHook(hook);
-	res.json(reply);
+	res.json(processHook(hook));
 });
 
 router.post('/ingress',function(req,res) {

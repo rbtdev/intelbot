@@ -3,33 +3,39 @@ var str2argv = require('string-argv');
 var argvParser = require('minimist');
 var links = data.data
 
-var Attachment = function (link) {
+
+module.exports = {
+	parse: parse,
+	execute: execute
+}
+
+function Attachment (link) {
 	this.fallback = link.name;
 	this.text =  "<"+ link.intelUrl + "|Intel Map>" + "   <" + link.mapsUrl + "|Google Map>";
 	this.title = link.name + " - " + link.area;
 };
 
-var makeAttachments = function (links) {
+function  makeAttachments (links) {
 	var attachments = [];
 	for (var i=0; i<links.length; i++) {
 		attachments.push(new Attachment(links[i]));
 	}
 	return attachments;
-}
+};
 
-list = function (args) {
+function list (args) {
 	var response = "List of available locations:";
 	var attachments = makeAttachments(data.find());
 	return {text: response, attachments: attachments};
 };
 
-add = function (args) {
+function add (args) {
 	var response = "Coming soon...";
 	var attachments = [];
 	return {text: response, attachments: attachments};
 };
 
-find = function (args) {
+function find (args) {
 	var response = "Area not found";
 	var searchText = args._.join(' ');
 	var attachments = makeAttachments(data.find(searchText));
@@ -39,7 +45,7 @@ find = function (args) {
 	return {text: response, attachments: attachments};
 };
 
-motd = function (args) {
+function motd (args) {
 	response = "usage: @intel -m 'message text'";
 	var attachments = [];
 	var message = args.m;
@@ -53,7 +59,7 @@ motd = function (args) {
 	return {text: response, attachments: attachments}
 };
 
-help = function (args) {
+function help (args) {
 	var attachments = [];
 	response = "Welcome to the Ingress Intel Link Bot (beta)\n";
 	response += "The following commands are now available:\n";
@@ -66,7 +72,7 @@ help = function (args) {
 	return {text: response, attachments: attachments}
 };
 
-exports.parse = function (hook) {
+function parse (hook) {
 	var text = hook.text.toLowerCase();
 	var argv = str2argv.parseArgsStringToArgv(text).splice(1);
 	return {
@@ -75,7 +81,7 @@ exports.parse = function (hook) {
 	};
 };
 
-exports.execute = function (command) {
+function execute (command) {
 	console.log("command: " + JSON.stringify(command))
 	switch (command.verb) {
 		case "list":
@@ -96,4 +102,5 @@ exports.execute = function (command) {
 	}
 	return response;
 };
+
 

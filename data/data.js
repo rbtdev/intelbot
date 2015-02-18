@@ -1,4 +1,8 @@
-exports.find = function (searchText) {
+module.exports = {
+  find: find
+}
+
+function find (searchText) {
   var items = [];
   for (var i = 0; i<links.length; i++) {
     var linkText = links[i].name + " " + links[i].area;
