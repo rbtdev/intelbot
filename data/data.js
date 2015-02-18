@@ -1,4 +1,4 @@
-exports.find = function (links, searchText) {
+exports.find = function (searchText) {
   var items = [];
   for (var i = 0; i<links.length; i++) {
     var linkText = links[i].name + " " + links[i].area;
@@ -16,7 +16,7 @@ exports.find = function (links, searchText) {
 };
 
 
-exports.data =[
+var links =[
   {
     "name":"International Houses",
     "area":"Balboa Park",
