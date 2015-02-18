@@ -1,8 +1,10 @@
 var express = require('express');
 var router = express.Router();
 var Slack = require('node-slack');
-var data = require('../data/links')
+var data = require('../data/links');
 var slack = new Slack("rbtdev.slack.com","0h7pWGuvbTDZGaO3pRNBcSKP");
+var strArgv = require('string-argv');
+var argParser = require('minimist');
 
 var links = data.data
 
@@ -22,46 +24,42 @@ var makeAttachments = function (links) {
 
 var processHook = function (hook) {
 	var text = hook.text.toLowerCase();
-	var commandLine = text.substr(text.indexOf(" ") + 1);
-	console.log('input = ' + text)
-
-	var input = commandLine.split(' ');
-	console.log('array = ' + JSON.stringify(input))
+	var argv = strArgv.parseArgsStringToArgv(text).splice(1);
+	console.log('argv = ' + argv);
+	var args = argParser(argv.splice(1), {});
+	var command = argv[0]
+	console.log('text = ' + text)
+	console.log('command = ' + command)
+	console.log('args = ' + JSON.stringify(args));
 	var response = "Default response";
 	var attachments = [];
-	if (input.length > 0) {
-		var command = input[0];
-
-		switch (command) {
-			case "list":
-				response = "List of available locations:";
-				attachments = makeAttachments(data.find(links, null));
-			break;
-			case "add":
-				response = "Comming soon.";
-			break;
-			case "find":
-				response = "Area not found";
-				var searchText = commandLine.substr(commandLine.indexOf(" ") + 1);
-				attachments = makeAttachments(data.find(links, searchText));
-				if (attachments.length > 0) {
-					response = "Results with '" + searchText + "'";
-				}
-			break;
-			default:
-				response = "Welcome to the Ingress Intel Link Bot (beta)\n";
-				response += "The following commands are now available:\n";
-				response += "@intel find <name> - searches for the location specified by <name>. Ex: @intel find tony romas\n",
-				response += "@intel list - dispays a list of available areas\n";
-				response += "Comming soon:\n"
-				response += "@intel add <area> <name> <link> - adds an area to the list of available areas. Admins only.\n";
-				response += "@intel upload <google spreadsheet url> - bulk adds a list of area entries. Admins only\n"
-				response += "Working on displaying a screenshot of the specified area along with the link.";
-			break;
-		}
-		
+	switch (command) {
+		case "list":
+			response = "List of available locations:";
+			attachments = makeAttachments(data.find(links, null));
+		break;
+		case "add":
+			response = "Comming soon.";
+		break;
+		case "find":
+			response = "Area not found";
+			var searchText = args._.join(' ');
+			attachments = makeAttachments(data.find(links, searchText));
+			if (attachments.length > 0) {
+				response = "Results with '" + searchText + "'";
+			}
+		break;
+		default:
+			response = "Welcome to the Ingress Intel Link Bot (beta)\n";
+			response += "The following commands are now available:\n";
+			response += "@intel find <name> - searches for the location specified by <name>. Ex: @intel find tony romas\n",
+			response += "@intel list - dispays a list of available areas\n";
+			response += "Comming soon:\n"
+			response += "@intel add <area> <name> <link> - adds an area to the list of available areas. Admins only.\n";
+			response += "@intel upload <google spreadsheet url> - bulk adds a list of area entries. Admins only\n"
+			response += "Working on displaying a screenshot of the specified area along with the link.";
+		break;
 	}
-
     return {
         text: response,
         attachments: attachments
