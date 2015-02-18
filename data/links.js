@@ -1,20 +1,18 @@
 exports.find = function (links, searchText) {
-  var attachments = [];
+  var items = [];
   for (var i = 0; i<links.length; i++) {
     var linkText = links[i].name + " " + links[i].area;
     console.log("search for: '" + searchText + "' in '" + linkText);
     if (searchText) {
       if (linkText.toLowerCase().search(searchText) > -1) {
-        var attachment = new Attachment(link)
-        attachments.push(attachment);
+        items.push(links[i]);
       }
     }
     else {
-      var attachment = new Attachment(link);
-      attachments.push(attachment);     
+      items.push(links[i]);     
     }
   }
-  return attachments;
+  return items;
 };
 
 

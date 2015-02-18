@@ -7,12 +7,18 @@ var slack = new Slack("rbtdev.slack.com","0h7pWGuvbTDZGaO3pRNBcSKP");
 var links = data.data
 
 var Attachment = function (link) {
-	this.fallback = links[i].name;
-	this.text =  "<"+ links[i].intelUrl + "|Intel Map>" + "   <" + links[i].mapsUrl + "|Google Map>";
-	this.title = links[i].name + " - " + links[i].area;
+	this.fallback = link.name;
+	this.text =  "<"+ link.intelUrl + "|Intel Map>" + "   <" + link.mapsUrl + "|Google Map>";
+	this.title = link.name + " - " + link.area;
 };
 
-
+var makeAttachments = function (links) {
+	var attachments = [];
+	for (var i=0; i<links.length; i++) {
+		attachments.push(new Attachment(links[i]));
+	}
+	return attachments;
+}
 
 var processHook = function (hook) {
 	var text = hook.text.toLowerCase();
@@ -29,7 +35,7 @@ var processHook = function (hook) {
 		switch (command) {
 			case "list":
 				response = "List of available locations:";
-				attachments = data.find(links, null);
+				attachments = makeAttachments(data.find(links, null));
 			break;
 			case "add":
 				response = "Comming soon.";
@@ -37,7 +43,7 @@ var processHook = function (hook) {
 			case "find":
 				response = "Area not found";
 				var searchText = commandLine.substr(commandLine.indexOf(" ") + 1);
-				attachments = data.find(links, searchText);
+				attachments = makeAttachments(data.find(links, searchText));
 				if (attachments.length > 0) {
 					response = "Results with '" + searchText + "'";
 				}
@@ -71,7 +77,7 @@ router.get('/', function(req, res) {
 router.get('/ingress', function (req,res) {
 	console.log('processing command...');
 	var hook = {text: req.param('text')}
-	var reply = parse(hook);
+	var reply = processHook(hook);
 	res.json(reply);
 });
 
