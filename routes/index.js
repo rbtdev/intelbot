@@ -1,7 +1,7 @@
 var express = require('express');
 var router = express.Router();
 var Slack = require('node-slack');
-var Commands = require('../commands/commands');
+var Bot = require('../bot/bot');
 
 var slack = new Slack("rbtdev.slack.com","0h7pWGuvbTDZGaO3pRNBcSKP");
 
@@ -12,12 +12,13 @@ router.get('/', function(req, res) {
 
 router.get('/ingress', function (req,res) {
 	var hook = {text: req.param('text')}
-	res.json(Commands.execute(hook));
+	var bot = new Bot(req);
+	res.json(bot.execute(hook));
 });
 
 router.post('/ingress',function(req,res) {
-
-    var reply = slack.respond(req.body,Commands.process(req));
+	var bot = new Bot(req);
+    var reply = slack.respond(req.body,bot.execute);
     res.json(reply);
 });
 

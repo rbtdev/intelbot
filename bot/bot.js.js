@@ -4,8 +4,6 @@ var argvParser = require('minimist');
 var Slack = require('node-slack');
 
 var links = data.data;
-var request;
-
 module.exports = {
 	execute: execute
 }
@@ -99,7 +97,7 @@ function parse (hook) {
 };
 
 function execute (hook) {
-	console.log('req = ' + JSON.stringify(request))
+	console.log('req = ' + JSON.stringify(req))
 	console.log("hook = " + JSON.stringify(hook))
 	var command = parse(hook);
 	switch (command.verb) {
@@ -124,10 +122,5 @@ function execute (hook) {
 	}
 	return response;
 };
-
-function process (req) {
-	request = req;
-	return execute;
-}
 
 
