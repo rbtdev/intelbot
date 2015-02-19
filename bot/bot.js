@@ -4,6 +4,8 @@ var argvParser = require('minimist');
 var Slack = require('node-slack');
 var links = data.data;
 
+var teams =	[{teamId: "T03M9UG6B", domain: "rbtdev", token: "xoxb-3777510376-rDcLi2PdaeH53pSiseUvREHX"}]
+
 function Attachment (link) {
 	this.fallback = link.name;
 	this.text =  "<"+ link.intelUrl + "|Intel Map>" + "   <" + link.mapsUrl + "|Google Map>";
@@ -40,7 +42,7 @@ function find (args) {
 	return {text: response, attachments: attachments};
 };
 
-function motd (hook, args) {
+function motd (hook, args, team) {
 	response = "usage: @intel -m 'message text'";
 	console.log("args = " + JSON.stringify(args))
 	var attachments = [];
@@ -53,14 +55,17 @@ function motd (hook, args) {
 	var argv = str2argv.parseArgsStringToArgv(commandStr);
 	var response = find(argvParser(argv.splice(1), {}));
 	response.text = message;
-	setInterval(sendMotd(hook, response), repeat*1000)
+	response.channel = hook.channel;
+	var team = findTeam(hook.team_id);
+	var slack = new Slack(team.domain, team.token);
+	setInterval(sendMotd(slack,response), repeat*1000)
 	return response;
 };
 
-function sendMotd(hook, response) {
+function sendMotd(slack, response) {
 	return function () {
 		console.log("response = " + JSON.stringify(response))
-		console.log("hook = " + JSON.stringify(hook))
+		slack.send(response);
 	}
 };
 
@@ -96,8 +101,17 @@ function Bot (req) {
 	this.req = req;
 };
 
+function token (teamId) {
+	for (var i = 0; i<teams.length; i++) {
+		if (teamId == teams[i].teamId) {
+			return teams[i].token;
+		}
+	}
+	return null;
+}
 Bot.prototype.execute = function (hook) {
 	console.log("hook = " + JSON.stringify(hook))
+	console.log("team ID: " + hook.team_id);
 	var command = parse(hook);
 	switch (command.verb) {
 		case "list":
