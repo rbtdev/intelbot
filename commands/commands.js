@@ -1,11 +1,12 @@
 var data = require('../data/data');
 var str2argv = require('string-argv');
 var argvParser = require('minimist');
-var links = data.data
+var Slack = require('node-slack');
 
+var links = data.data;
+var request;
 
 module.exports = {
-	parse: parse,
 	execute: execute
 }
 
@@ -45,18 +46,34 @@ function find (args) {
 	return {text: response, attachments: attachments};
 };
 
-function motd (args) {
+function motd (hook, args) {
 	response = "usage: @intel -m 'message text'";
+	console.log("args = " + JSON.stringify(args))
 	var attachments = [];
 	var message = args.m;
 	var location = args.l;
 	var repeat = args.r;
 	var start = args.s;
 	var end = args.e;
-	if (message) {
-		response = "You said: " + message;
+	var commandStr = "find " + location;
+	var argv = str2argv.parseArgsStringToArgv(commandStr);
+	var response = find(argvParser(argv.splice(1), {}));
+	response.text = message;
+	setInterval(sendMotd(hook, response), repeat*1000)
+	return response;
+};
+
+function sendMotd(hook, response) {
+	return function () {
+		console.log("response = " + JSON.stringify(response))
+		console.log("hook = " + JSON.stringify(hook))
 	}
-	return {text: response, attachments: attachments}
+};
+
+function upload (args) {
+	response = "Comming soon...";
+	attachments = [];
+	return {text: response, attachments: attachments};
 };
 
 function help (args) {
@@ -81,8 +98,10 @@ function parse (hook) {
 	};
 };
 
-function execute (command) {
-	console.log("command: " + JSON.stringify(command))
+function execute (hook) {
+	console.log('req = ' + JSON.stringify(request))
+	console.log("hook = " + JSON.stringify(hook))
+	var command = parse(hook);
 	switch (command.verb) {
 		case "list":
 			response = list(command.rgs);
@@ -94,7 +113,10 @@ function execute (command) {
 			response = find(command.args);
 		break;
 		case "motd":
-			response = motd(command.args);
+			response = motd(hook, command.args);
+		break;
+		case "upload":
+			response = upload(command.args);
 		break;
 		default:
 			response = help(command.args);
@@ -102,5 +124,10 @@ function execute (command) {
 	}
 	return response;
 };
+
+function process (req) {
+	request = req;
+	return execute;
+}
 
 
