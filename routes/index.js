@@ -18,6 +18,7 @@ router.get('/ingress', function (req,res) {
 
 router.post('/ingress',function(req,res) {
 	var bot = new Bot(req);
+	console.log('calling bot..');
     var reply = slack.respond(req.body,bot.execute);
     res.json(reply);
 });
