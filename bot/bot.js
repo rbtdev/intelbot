@@ -97,7 +97,7 @@ function Bot (req) {
 };
 
 Bot.prototype.execute = function (hook) {
-	//console.log('headers = ' + JSON.stringify(this.req.headers))
+	console.log('headers = ' + JSON.stringify(this.req.headers))
 	console.log("hook = " + JSON.stringify(hook))
 	var command = parse(hook);
 	switch (command.verb) {
