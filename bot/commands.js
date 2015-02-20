@@ -52,10 +52,7 @@ function motd (hook, args, team) {
 	var argv = str2argv.parseArgsStringToArgv(commandStr);
 	var response = find(argvParser(argv.splice(1), {}));
 	response.text = message;
-	response.channel = hook.channel;
-	var team = findTeam(hook.team_id);
-	var slack = new Slack(team.domain, team.token);
-	setInterval(sendMotd(slack,response), repeat*1000)
+	//setInterval(sendMotd(slack,response), repeat*1000)
 	return response;
 };
 

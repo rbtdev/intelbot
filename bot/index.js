@@ -1,61 +1,64 @@
-var Slack = require('slack-client');
-var Commands = require('./commands.js');
+function Bot (token) {
 
-var token = 'xoxb-3777510376-rDcLi2PdaeH53pSiseUvREHX', // Add a bot at https://my.slack.com/services/new/bot and copy the token here.
-    autoReconnect = true,
-    autoMark = true;
+	var Slack = require('slack-client');
+	var Commands = require('./commands.js');
 
-var slack = new Slack(token, autoReconnect, autoMark);
+	var autoReconnect = true;
+	var autoMark = true;
 
-slack.on('open', function() {
+	this.slack = new Slack(token, autoReconnect, autoMark);
 
-	var channels = [],
-	    groups = [],
-	    unreads = slack.getUnreadCount(),
-	    key;
+	this.slack.on('open', function() {
 
-	for (key in slack.channels) {
-		if (slack.channels[key].is_member) {
-			channels.push('#' + slack.channels[key].name);
+		var channels = [],
+		    groups = [],
+		    unreads = this.slack.getUnreadCount(),
+		    key;
+
+		for (key in this.slack.channels) {
+			if (this.slack.channels[key].is_member) {
+				channels.push('#' + this.slack.channels[key].name);
+			}
 		}
-	}
 
-	for (key in slack.groups) {
-		if (slack.groups[key].is_open && !slack.groups[key].is_archived) {
-			groups.push(slack.groups[key].name);
+		for (key in this.slack.groups) {
+			if (this.slack.groups[key].is_open && !this.slack.groups[key].is_archived) {
+				groups.push(this.slack.groups[key].name);
+			}
 		}
-	}
 
-	console.log('Welcome to Slack. You are @%s of %s', slack.self.name, slack.team.name);
-	console.log('You are in: %s', channels.join(', '));
-	console.log('As well as: %s', groups.join(', '));
-	console.log('You have %s unread ' + (unreads === 1 ? 'message' : 'messages'), unreads);
-});
+		console.log('Welcome to Slack. You are @%s of %s', this.slack.self.name, this.slack.team.name);
+		console.log('You are in: %s', channels.join(', '));
+		console.log('As well as: %s', groups.join(', '));
+		console.log('You have %s unread ' + (unreads === 1 ? 'message' : 'messages'), unreads);
+	}.bind(this));
 
-slack.on('message', function(message) {
+	this.slack.on('message', function(message) {
 
-	var type = message.type,
-	    channel = slack.getChannelGroupOrDMByID(message.channel),
-	    user = slack.getUserByID(message.user),
-	    time = message.ts,
-	    text = message.text,
-	    response = '';
+		var type = message.type,
+		    channel = this.slack.getChannelGroupOrDMByID(message.channel),
+		    user = this.slack.getUserByID(message.user),
+		    time = message.ts,
+		    text = message.text,
+		    response = '';
+		//console.log('Received: %s %s @%s %s "%s"', type, (channel.is_channel ? '#' : '') + channel.name, user.name, time, text);
 
-	console.log('Received: %s %s @%s %s "%s"', type, (channel.is_channel ? '#' : '') + channel.name, user.name, time, text);
+		// Respond to messages with the reverse of the text received.
 
-	// Respond to messages with the reverse of the text received.
+		if ((type === 'message') && (text.split(' ')[0] === '<@U03NVF0B2>')) {
 
-	if ((type === 'message') && (text.split(' ')[0] === '<@U03NVF0B2>')) {
+			response = Commands.execute(message);
+			channel.postMessage(response);
+			console.log('@%s responded with "%s"', this.slack.self.name, response);
+		}
+	}.bind(this));
 
-		response = Commands.execute(message);
-		channel.postMessage(response);
-		console.log('@%s responded with "%s"', slack.self.name, response);
-	}
-});
+	this.slack.on('error', function(error) {
 
-slack.on('error', function(error) {
+		console.error('Error: %s', error);
+	}.bind(this));
 
-	console.error('Error: %s', error);
-});
+	this.slack.login();
+}
 
-slack.login();
+module.exports = Bot;

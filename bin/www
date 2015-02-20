@@ -1,7 +1,9 @@
 #!/usr/bin/env node
 var debug = require('debug')('slack');
 var app = require('../app');
-var bot = require('../bot');
+var Bot = require('../bot');
+
+var bot = new Bot('xoxb-3777510376-rDcLi2PdaeH53pSiseUvREHX');
 
 app.set('port', process.env.PORT || 3000);
 
