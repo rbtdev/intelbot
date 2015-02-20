@@ -108,7 +108,6 @@ function token (teamId) {
 }
 exports.execute  = function (hook, channel) {
 	console.log("hook = " + JSON.stringify(hook))
-	console.log("team ID: " + hook.team_id);
 	var command = parse(hook);
 	switch (command.verb) {
 		case "list":
