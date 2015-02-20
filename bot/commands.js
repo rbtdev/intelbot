@@ -6,7 +6,7 @@ var links = data.data;
 function Attachment (link) {
 	this.fallback = link.name;
 	this.text =  "<"+ link.intelUrl + "|Intel Map>" + "   <" + link.mapsUrl + "|Google Map>";
-	this.title = link.name + " - " + link.area;
+	this.title = link.name + " - " + link.area + " (" + link.shortCode + ")";
 };
 
 function  makeAttachments (links) {

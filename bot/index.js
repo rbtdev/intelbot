@@ -42,7 +42,7 @@ function Bot (token) {
 		    text = message.text,
 		    response = '';
 		//console.log('Received: %s %s @%s %s "%s"', type, (channel.is_channel ? '#' : '') + channel.name, user.name, time, text);
-		if ((type === 'message') && (text.split(' ')[0] === '<@U03NVF0B2>')) {
+		if ((type === 'message') && (text.split(' ')[0] === '<@' + this.slack.self.id + '>')) {
 			response = Commands.execute(message, channel);
 			channel.postMessage(response);
 			console.log('@%s responded with "%s"', this.slack.self.name, response);
