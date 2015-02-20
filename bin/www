@@ -6,8 +6,8 @@ var Bot = require('../bot');
 var rbtbot = new Bot('xoxb-3777510376-rDcLi2PdaeH53pSiseUvREHX');
 var sdebot = new Bot('xoxb-3784724122-4t6lOhZssdoRHfaQGgLOzj8j');
 
-app.set('port', process.env.PORT || 3000);
+// app.set('port', process.env.PORT || 3000);
 
-var server = app.listen(app.get('port'), function() {
-  console.log('Express server listening on port ' + server.address().port);
-});
+// var server = app.listen(app.get('port'), function() {
+//   console.log('Express server listening on port ' + server.address().port);
+// });
