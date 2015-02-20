@@ -5,7 +5,7 @@ var Bot = require('../bot');
 console.log("Starting bots...")
 var rbtbot = new Bot('xoxb-3777510376-rDcLi2PdaeH53pSiseUvREHX');
 var sdebot = new Bot('xoxb-3784724122-4t6lOhZssdoRHfaQGgLOzj8j');
-
+setInterval(function () {console.log("Ping...")}, 15*60*1000);
 app.set('port', process.env.PORT || 3000);
 
 var server = app.listen(app.get('port'), function() {
