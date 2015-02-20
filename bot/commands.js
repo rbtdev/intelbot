@@ -52,7 +52,7 @@ function motd (hook, args,channel) {
 	var argv = str2argv.parseArgsStringToArgv(commandStr);
 	var response = find(argvParser(argv.splice(1), {}));
 	response.text = message;
-	setInterval(sendMotd(commandStr, message, channel), repeat*1000)
+	setInterval(sendMotd(commandStr, message, channel), repeat*60*1000)
 	return response;
 };
 
