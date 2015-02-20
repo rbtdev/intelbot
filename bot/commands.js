@@ -39,7 +39,7 @@ function find (args) {
 	return {text: response, attachments: attachments};
 };
 
-function motd (hook, args, team) {
+function motd (hook, args,channel) {
 	response = "usage: @intel -m 'message text'";
 	console.log("args = " + JSON.stringify(args))
 	var attachments = [];
@@ -52,14 +52,17 @@ function motd (hook, args, team) {
 	var argv = str2argv.parseArgsStringToArgv(commandStr);
 	var response = find(argvParser(argv.splice(1), {}));
 	response.text = message;
-	//setInterval(sendMotd(slack,response), repeat*1000)
+	setInterval(sendMotd(commandStr, message, channel), repeat*1000)
 	return response;
 };
 
-function sendMotd(slack, response) {
+function sendMotd(commandStr, message, channel) {
 	return function () {
+		var argv = str2argv.parseArgsStringToArgv(commandStr);
+		var response = find(argvParser(argv.splice(1), {}));
+		response.text = message;
 		console.log("response = " + JSON.stringify(response))
-		slack.send(response);
+		channel.postMessage(response);
 	}
 };
 
@@ -103,7 +106,7 @@ function token (teamId) {
 	}
 	return null;
 }
-exports.execute  = function (hook) {
+exports.execute  = function (hook, channel) {
 	console.log("hook = " + JSON.stringify(hook))
 	console.log("team ID: " + hook.team_id);
 	var command = parse(hook);
@@ -118,7 +121,7 @@ exports.execute  = function (hook) {
 			response = find(command.args);
 		break;
 		case "motd":
-			response = motd(hook, command.args);
+			response = motd(hook, command.args, channel);
 		break;
 		case "upload":
 			response = upload(command.args);
