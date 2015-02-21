@@ -94,20 +94,9 @@ function parse (hook) {
 	};
 };
 
-function Bot (req) {
-	this.req = req;
-};
-
-function token (teamId) {
-	for (var i = 0; i<teams.length; i++) {
-		if (teamId == teams[i].teamId) {
-			return teams[i].token;
-		}
-	}
-	return null;
-}
 exports.execute  = function (hook, channel) {
 	console.log("hook = " + JSON.stringify(hook))
+	data.load("https://docs.google.com/spreadsheets/d/1GI580TI29HL05Omegqb-HqHczU9sAY5XAgY9G-h9Eqs/pubhtml")
 	var command = parse(hook);
 	switch (command.verb) {
 		case "list":

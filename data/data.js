@@ -1,5 +1,6 @@
 module.exports = {
-  find: find
+  find: find,
+  load: load
 }
 
 function find (searchText) {
@@ -18,6 +19,13 @@ function find (searchText) {
   return items;
 };
 
+function load (url) {
+  var Tabletop = require('tabletop');
+
+  Tabletop.init( { key: url,
+                   callback: function(data, tabletop) { console.log(data) },
+                   simpleSheet: true } )
+};
 
 var links =[
   {
