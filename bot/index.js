@@ -35,17 +35,18 @@ function Bot (token) {
 
 	this.slack.on('message', function(message) {
 
-		var type = message.type,
-		    channel = this.slack.getChannelGroupOrDMByID(message.channel),
-		    user = this.slack.getUserByID(message.user),
-		    time = message.ts,
-		    text = message.text,
-		    response = '';
+		var type = message.type;
+		var channel = this.slack.getChannelGroupOrDMByID(message.channel);
+		var user = this.slack.getUserByID(message.user);
+		var time = message.ts;
+		var text = message.text;
 		//console.log('Received: %s %s @%s %s "%s"', type, (channel.is_channel ? '#' : '') + channel.name, user.name, time, text);
 		if ((type === 'message') && (text.split(' ')[0] === '<@' + this.slack.self.id + '>')) {
-			response = Commands.execute(message, channel);
-			channel.postMessage(response);
-			console.log('@%s responded with "%s"', this.slack.self.name, response);
+			var _this = this;
+			Commands.execute(message, channel, function (response) {
+				channel.postMessage(response);
+				console.log('@%s responded with "%s"', _this.slack.self.name, response);
+			});
 		}
 	}.bind(this));
 

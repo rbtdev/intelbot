@@ -17,10 +17,12 @@ function  makeAttachments (links) {
 	return attachments;
 };
 
-function list (args) {
+function list (args, respond) {
 	var response = "List of available locations:";
-	var attachments = makeAttachments(data.find());
-	return {text: response, attachments: attachments};
+	data.find(null, function (links) {
+		var attachments = makeAttachments(links);
+		respond({text: response, attachments: attachments});
+	});
 };
 
 function add (args) {
@@ -29,14 +31,16 @@ function add (args) {
 	return {text: response, attachments: attachments};
 };
 
-function find (args) {
+function find (args, respond) {
 	var response = "Area not found";
 	var searchText = args._.join(' ');
-	var attachments = makeAttachments(data.find(searchText));
-	if (attachments.length > 0) {
-		response = "Results with '" + searchText + "'";
-	}
-	return {text: response, attachments: attachments};
+	data.find(searchText, function (links) {
+		var attachments = makeAttachments(links);
+		if (attachments.length > 0) {
+			response = "Results with '" + searchText + "'";
+		}
+		respond({text: response, attachments: attachments});
+	});
 };
 
 function motd (hook, args,channel) {
@@ -72,7 +76,7 @@ function upload (args) {
 	return {text: response, attachments: attachments};
 };
 
-function help (args) {
+function help (args, respond) {
 	var attachments = [];
 	response = "Welcome to the Ingress Intel Link Bot (beta)\n";
 	response += "The following commands are now available:\n";
@@ -82,7 +86,7 @@ function help (args) {
 	response += "@intel add <area> <name> <link> - adds an area to the list of available areas. Admins only.\n";
 	response += "@intel upload <google spreadsheet url> - bulk adds a list of area entries. Admins only\n"
 	response += "Working on displaying a screenshot of the specified area along with the link.";
-	return {text: response, attachments: attachments}
+	respond({text: response, attachments: attachments})
 };
 
 function parse (hook) {
@@ -94,19 +98,19 @@ function parse (hook) {
 	};
 };
 
-exports.execute  = function (hook, channel) {
+exports.execute  = function (hook, channel, respond) {
 	console.log("hook = " + JSON.stringify(hook))
-	data.load("https://docs.google.com/spreadsheets/d/1GI580TI29HL05Omegqb-HqHczU9sAY5XAgY9G-h9Eqs/pubhtml")
+	//data.load("https://docs.google.com/spreadsheets/d/1GI580TI29HL05Omegqb-HqHczU9sAY5XAgY9G-h9Eqs/pubhtml")
 	var command = parse(hook);
 	switch (command.verb) {
 		case "list":
-			response = list(command.rgs);
+			list(command.args, respond);
 		break;
 		case "add":
 			response = add(command.args);
 		break;
 		case "find":
-			response = find(command.args);
+			find(command.args, respond);
 		break;
 		case "motd":
 			response = motd(hook, command.args, channel);
@@ -115,10 +119,9 @@ exports.execute  = function (hook, channel) {
 			response = upload(command.args);
 		break;
 		default:
-			response = help(command.args);
+			help(command.args, respond);
 		break;
 	}
-	return response;
 };
 
 
