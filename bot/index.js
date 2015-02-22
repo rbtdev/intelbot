@@ -34,14 +34,20 @@ function Bot (token) {
 
 	this.slack.on('message', function(message) {
 
+		console.log("activy = " + JSON.stringify(message))
 		var type = message.type;
 		var channel = this.slack.getChannelGroupOrDMByID(message.channel);
 		var user = this.slack.getUserByID(message.user);
 		var time = message.ts;
 		var text = message.text;
+		var upload = message.upload;
 		//console.log('Received: %s %s @%s %s "%s"', type, (channel.is_channel ? '#' : '') + channel.name, user.name, time, text);
-		if ((type === 'message') && (text.split(' ')[0] === '<@' + this.slack.self.id + '>')) {
+		if (
+			(type === 'message') && 
+			((text.split(' ')[0] === '<@' + this.slack.self.id + '>') || upload)
+			) {
 			var _this = this;
+			message.text = upload?"@" + this.slack.self.id + "> upload":message.text;
 			this.brain.exec(message, channel, function (response) {
 				channel.postMessage(response);
 				console.log('@%s responded with "%s"', _this.slack.self.name, response);

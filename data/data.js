@@ -33,11 +33,17 @@ function find (searchText, cb) {
   })
 }
 
-function load (url) {
-  var Tabletop = require('tabletop');
+function load(fileUrl, cb) {
+  var fs = require('fs');
+  var request = require('request');
+  request(fileUrl).pipe(fs.createWriteStream('farm.csv'))
+  cb("done");
+}
+// function load (url) {
+//   var Tabletop = require('tabletop');
 
-  Tabletop.init( { key: url,
-                   callback: function(data, tabletop) { console.log(data) },
-                   simpleSheet: true } )
-};
+//   Tabletop.init( { key: url,
+//                    callback: function(data, tabletop) { console.log(data) },
+//                    simpleSheet: true } )
+// };
 

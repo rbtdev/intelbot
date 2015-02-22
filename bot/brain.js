@@ -99,10 +99,11 @@ module.exports = function Brain() {
 		}
 	};
 
-	function upload (args) {
-		response = "Comming soon...";
-		attachments = [];
-		return {text: response, attachments: attachments};
+	function upload (hook, respond) {
+		console.log("file url: " + hook.file.url_download)
+		data.load(hook.file.url_download, function (resp) {
+			respond ({text: resp, attachments: null});
+		})
 	};
 
 	function help (args, respond) {
@@ -119,8 +120,7 @@ module.exports = function Brain() {
 	};
 
 	function parse (hook) {
-		var text = hook.text.toLowerCase();
-		var argv = str2argv.parseArgsStringToArgv(text).splice(1);
+		var argv = str2argv.parseArgsStringToArgv(hook.text).splice(1);
 		return {
 			verb: argv[0],
 			args: argvParser(argv.splice(1), {})
@@ -131,7 +131,7 @@ module.exports = function Brain() {
 		console.log("hook = " + JSON.stringify(hook))
 		//data.load("https://docs.google.com/spreadsheets/d/1GI580TI29HL05Omegqb-HqHczU9sAY5XAgY9G-h9Eqs/pubhtml")
 		var command = parse(hook);
-		switch (command.verb) {
+		switch (command.verb.toLowerCase()) {
 			case "list":
 				list(command.args, respond);
 			break;
@@ -145,7 +145,7 @@ module.exports = function Brain() {
 				motd(hook, command.args, channel, respond);
 			break;
 			case "upload":
-				response = upload(command.args);
+				upload(hook, respond);
 			break;
 			default:
 				help(command.args, respond);
