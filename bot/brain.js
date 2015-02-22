@@ -53,15 +53,19 @@ module.exports = function Brain() {
 		var errorMessage = null;
 		console.log("args = " + JSON.stringify(args))
 		var attachments = [];
-		var message = args.m;
+		var message = args.m?args.m:"";
 		var location = args.l;
-		var repeat = args.r;
-		var start = args.s;
-		var end = args.e;
-		if (errorMessage) {
-			respond({text:errorMessage});
+		args.r = args.r?parseInt(args.r):0;
+		var repeat = isNaN(args.r)?0:args.r;
+		if ((args.r) && (repeat < 10)) {
+			respond({text: "Repeat interval must be greater than 10min"});
 		}
 		else {
+			if (repeat) {
+				message ="To cancel this message type `@intel motd`\n" + "*" + message + "*";
+			}
+			var start = args.s;
+			var end = args.e;
 			if (location) {
 				var commandStr = "find " + location;
 				var argv = str2argv.parseArgsStringToArgv(commandStr);
@@ -75,10 +79,10 @@ module.exports = function Brain() {
 					respond({text: message, attachments: null});
 				}
 				else {
-					respond({text: "MOTD cleared"})
+					respond({text: "Message cleared"})
 				}
 			}
-			if ((repeat) && (parseInt(repeat) >=10)) {
+			if (repeat >= 10) {
 				this.motdTimer = setInterval(sendMotd(commandStr, message, channel), repeat*60*1000);
 			}
 		}
