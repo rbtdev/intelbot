@@ -121,6 +121,7 @@ module.exports = function Brain() {
 
 	function parse (hook) {
 		var argv = str2argv.parseArgsStringToArgv(hook.text).splice(1);
+		argv = argv.length?argv:["help"];
 		return {
 			verb: argv[0],
 			args: argvParser(argv.splice(1), {})

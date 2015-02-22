@@ -40,7 +40,9 @@ function Bot (token) {
 		var user = this.slack.getUserByID(message.user);
 		var time = message.ts;
 		var text = message.text;
-		var upload = message.upload;
+		var upload = ((message.upload) && 
+					  (message.file.initial_comment) &&
+					  (message.file.initial_comment.comment.split(' ')[0] === '<@' + this.slack.self.id + '>'))
 		//console.log('Received: %s %s @%s %s "%s"', type, (channel.is_channel ? '#' : '') + channel.name, user.name, time, text);
 		if (
 			(type === 'message') && 

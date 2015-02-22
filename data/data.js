@@ -34,11 +34,25 @@ function find (searchText, cb) {
 }
 
 function load(fileUrl, cb) {
-  var fs = require('fs');
   var request = require('request');
-  request(fileUrl).pipe(fs.createWriteStream('farm.csv'))
-  cb("done");
+  var Converter = require("csvtojson").core.Converter;
+  var converter = new Converter({constructResult:true});
+  cb("Uploading file...");
+  converter.on("end_parsed",function(jsonObj){
+    console.log(jsonObj); //here is your result json object 
+    cb(jsonObj.length + " records uploaded. Saving data...");
+      mongoose.connection.db.dropCollection('locations', function(err, result) {
+      jsonObj.forEach(function (item) {
+        var location = new Location(item);
+        location.save();
+      })
+      cb("Database updated.");
+    });
+ 
+  });
+  request(fileUrl).pipe(converter);
 }
+
 // function load (url) {
 //   var Tabletop = require('tabletop');
 
