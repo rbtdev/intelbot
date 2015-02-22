@@ -22,15 +22,16 @@ module.exports = {
 
 
 function find (searchText, cb) {
-  var query = {}
+  var search = {}
   if (searchText) {
-    query = {'$text':{'$search':searchText}};
+    search = {'$text':{'$search':searchText}};
   }
-  Location.find( query, function (err, links) {
-    if (err) {
-      console.log("DB - find error: " + JSON.stringify(err));
-    }
-    cb(links);
+  Location
+    .find(search)
+    .sort('name')
+    .exec(function (err, links) {
+      err?console.log("DB - find error: " + JSON.stringify(err)):null;
+      cb(links?links:[]);
   })
 }
 
