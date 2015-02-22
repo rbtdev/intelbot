@@ -50,6 +50,7 @@ module.exports = function Brain() {
 
 	function motd (hook, args,channel, respond) {
 		clearInterval(this.motdTimer);
+		var errorMessage = null;
 		console.log("args = " + JSON.stringify(args))
 		var attachments = [];
 		var message = args.m;
@@ -57,23 +58,30 @@ module.exports = function Brain() {
 		var repeat = args.r;
 		var start = args.s;
 		var end = args.e;
-		if (location) {
-			var commandStr = "find " + location;
-			var argv = str2argv.parseArgsStringToArgv(commandStr);
-			find(argvParser(argv.splice(1)), function (response) {
-				response.text = message;
-				respond(response);
-			});
+		if (errorMessage) {
+			respond({text:errorMessage});
 		}
 		else {
-			if (message) {
-				respond({text: message, attachments: null});
+			if (location) {
+				var commandStr = "find " + location;
+				var argv = str2argv.parseArgsStringToArgv(commandStr);
+				find(argvParser(argv.splice(1)), function (response) {
+					response.text = message;
+					respond(response);
+				});
 			}
 			else {
-				respond({text: "MOTD cleared"})
+				if (message) {
+					respond({text: message, attachments: null});
+				}
+				else {
+					respond({text: "MOTD cleared"})
+				}
+			}
+			if ((repeat) && (parseInt(repeat) >=10)) {
+				this.motdTimer = setInterval(sendMotd(commandStr, message, channel), repeat*60*1000);
 			}
 		}
-		this.motdTimer = repeat?setInterval(sendMotd(commandStr, message, channel), repeat*60*1000):null;
 	};
 
 	function sendMotd(commandStr, message, channel) {
