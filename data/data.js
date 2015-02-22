@@ -21,7 +21,9 @@ module.exports = {
 }
 
 function find (searchText, cb) {
-  searchText = '\"' + searchText + '\"';
+  if (searchText) {
+    searchText = '\"' + searchText + '\"';
+  }
   Location
     .find(searchText?{'$text':{'$search':searchText}}:{})
     .sort('name')
