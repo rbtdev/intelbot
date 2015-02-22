@@ -20,14 +20,10 @@ module.exports = {
   load: load
 }
 
-
 function find (searchText, cb) {
-  var search = {}
-  if (searchText) {
-    search = {'$text':{'$search':searchText}};
-  }
+  searchText = '\"' + searchText + '\"';
   Location
-    .find(search)
+    .find(searchText?{'$text':{'$search':searchText}}:{})
     .sort('name')
     .exec(function (err, links) {
       err?console.log("DB - find error: " + JSON.stringify(err)):null;
