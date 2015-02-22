@@ -33,21 +33,6 @@ function find (searchText, cb) {
     cb(links);
   })
 }
-// function find (searchText) {
-//   var items = [];
-//   for (var i = 0; i<links.length; i++) {
-//     var linkText = links[i].name + " " + links[i].area + " " + links[i].shortCode;
-//     if (searchText) {
-//       if (linkText.toLowerCase().search(searchText) > -1) {
-//         items.push(links[i]);
-//       }
-//     }
-//     else {
-//       items.push(links[i]);     
-//     }
-//   }
-//   return items;
-// };
 
 function load (url) {
   var Tabletop = require('tabletop');

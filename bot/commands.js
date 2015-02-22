@@ -11,8 +11,10 @@ function Attachment (link) {
 
 function  makeAttachments (links) {
 	var attachments = [];
-	for (var i=0; i<links.length; i++) {
-		attachments.push(new Attachment(links[i]));
+	if (links) {
+		for (var i=0; i<links.length; i++) {
+			attachments.push(new Attachment(links[i]));
+		}
 	}
 	return attachments;
 };
