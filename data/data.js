@@ -38,19 +38,37 @@ function load(fileUrl, cb) {
   var Converter = require("csvtojson").core.Converter;
   var converter = new Converter({constructResult:true});
   cb("Uploading file...");
-  converter.on("end_parsed",function(jsonObj){
-    console.log(jsonObj); //here is your result json object 
-    cb(jsonObj.length + " records uploaded. Saving data...");
-      mongoose.connection.db.dropCollection('locations', function(err, result) {
-      jsonObj.forEach(function (item) {
-        var location = new Location(item);
-        location.save();
-      })
-      cb("Database updated.");
+  try {
+    converter.on("end_parsed",function(jsonObj){
+      console.log(jsonObj); //here is your result json object 
+      cb(jsonObj.length + " records uploaded. Saving data...");
+        mongoose.connection.db.dropCollection('locations', function(err, result) {
+          Location.collection.insert(jsonObj, function (err, docs) {
+            if (err) {
+              cb("DB error on insert:" + JSON.stringify(err))
+            }
+            else {
+              cb("Database updated. Re-Indexing...");
+              Location.ensureIndexes(function (err) {
+                if (err) {
+                  cb("Error indexing: " + JSON.stringify(err))
+                }
+                else {
+                  cb("Indexing complete.");
+                }
+              });
+            }
+
+        });
+      });
+   
     });
- 
-  });
-  request(fileUrl).pipe(converter);
+
+    request(fileUrl).pipe(converter);
+  }
+  catch (e) {
+    cb("Error importing file: " + JSON.stringify(e))
+  }
 }
 
 // function load (url) {
