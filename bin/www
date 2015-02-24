@@ -10,6 +10,10 @@ teams.forEach( function (team) {
 	var bot = new Bot(team.key);
 })
 
+// console.log("Teams = " + teams);
+// var rbtbot = new Bot('xoxb-3777510376-rDcLi2PdaeH53pSiseUvREHX');
+// var sdebot = new Bot('xoxb-3784724122-4t6lOhZssdoRHfaQGgLOzj8j');
+
 console.log("Scheduling ping...")
 setInterval(function () {
 	var http = require('http');
