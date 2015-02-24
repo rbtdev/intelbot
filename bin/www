@@ -5,9 +5,10 @@ var Bot = require('../bot');
 
 console.log("Starting bots...")
 var teams = JSON.parse(process.env.TEAMS);
+var bots = [];
 teams.forEach( function (team) {
 	console.log("team = " + JSON.stringify(team))
-	var bot = new Bot(team.key);
+	bots.push(new Bot(team.key));
 })
 
 console.log("Scheduling ping...")
