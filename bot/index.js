@@ -38,6 +38,7 @@ function Bot (token) {
 		var type = message.type;
 		var channel = this.slack.getChannelGroupOrDMByID(message.channel);
 		var user = this.slack.getUserByID(message.user);
+		console.log("USER = " + message.user);
 		var time = message.ts;
 		var text = message.text;
 		var upload = ((message.upload) && 
