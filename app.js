@@ -53,5 +53,7 @@ app.use(function(err, req, res, next) {
     });
 });
 
+var ping = require('./util/ping')
+ping.start(process.env.APP_NAME); 
 
 module.exports = app;

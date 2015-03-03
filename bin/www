@@ -2,9 +2,6 @@
 var debug = require('debug')('slack');
 var app = require('../app');
 var Bot = require('../bot');
-var keepAlive = require('../util/ping');
-
-keepAlive.start(process.env.APP_NAME, 1);
 
 console.log("Starting bots...")
 var teams = JSON.parse(process.env.TEAMS);
@@ -13,7 +10,6 @@ teams.forEach( function (team) {
 	console.log("team = " + JSON.stringify(team))
 	bots.push(new Bot(team.key));
 })
-
 
 app.set('port', process.env.PORT || 3000);
 var server = app.listen(app.get('port'), function() {
