@@ -54,6 +54,6 @@ app.use(function(err, req, res, next) {
 });
 
 var ping = require('./util/ping')
-ping.start(process.env.APP_NAME); 
+ping.start(process.env.APP_NAME,15); 
 
 module.exports = app;
