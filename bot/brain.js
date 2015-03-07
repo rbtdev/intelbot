@@ -1,10 +1,12 @@
 var data = require('../data/data');
 var str2argv = require('string-argv');
 var argvParser = require('minimist');
+var Messenger = require('messenger');
 
 module.exports = function Brain() {
 	this.exec = exec;
 	this.motdTimer = null;
+	this.messenger = new Messenger();
 
 	function Attachment (link) {
 		this.fallback = link.name;

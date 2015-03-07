@@ -1,3 +1,4 @@
+<<<<<<< HEAD
 module.exports = function Messenger() {
 	var messages = [];
 	var id = 0;
@@ -37,4 +38,3 @@ module.exports = function Messenger() {
     	});
     	return found.length?found[0]:null;
 	};
-}
