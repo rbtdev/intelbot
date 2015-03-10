@@ -5,7 +5,6 @@ var Messenger = require('messenger');
 
 module.exports = function Brain() {
 	this.exec = exec;
-	this.motdTimer = null;
 	this.messenger = new Messenger();
 
 	function Attachment (link) {
@@ -51,11 +50,10 @@ module.exports = function Brain() {
 	};
 
 	function motd (hook, args,channel, respond) {
-		clearInterval(this.motdTimer);
 		var errorMessage = null;
 		console.log("args = " + JSON.stringify(args))
 		var attachments = [];
-		var message = args.m?args.m:"";
+		var text = args.m?args.m:"";
 		var location = args.l;
 		args.r = args.r?parseInt(args.r):0;
 		var repeat = isNaN(args.r)?0:args.r;
@@ -63,42 +61,29 @@ module.exports = function Brain() {
 			respond({text: "Repeat interval must be greater than 10min"});
 		}
 		else {
-			if (repeat) {
-				message ="To cancel this message type `@intel motd`\n" + "*" + message + "*";
-			}
 			var start = args.s;
 			var end = args.e;
+			var commandStr = "";
 			if (location) {
 				var commandStr = "find " + location;
-				var argv = str2argv.parseArgsStringToArgv(commandStr);
-				find(argvParser(argv.splice(1)), function (response) {
-					response.text = message;
-					respond(response);
-				});
 			}
-			else {
-				if (message) {
-					respond({text: message, attachments: null});
-				}
-				else {
-					respond({text: "Message cleared"})
-				}
-			}
-			if (repeat >= 10) {
-				this.motdTimer = setInterval(sendMotd(commandStr, message, channel), repeat*60*1000);
-			}
+			var message = this.messenger.createMessage({
+				text: "To cancel this message type `@intel motd`" + message.id + "\n" + "*" + text + "*",
+				interval: repeat,
+				command: commandStr,
+				channel: channel,
+				cb: sendMotd
+			});
 		}
 	};
 
-	function sendMotd(commandStr, message, channel) {
-		return function () {
-			var argv = str2argv.parseArgsStringToArgv(commandStr);
-			find(argvParser(argv.splice(1)), function (response) {
-				response.text = message;
-				console.log("response = " + JSON.stringify(response))
-				channel.postMessage(response);
-			});
-		}
+	function sendMotd() {
+		var argv = str2argv.parseArgsStringToArgv(this.commandStr);
+		find(argvParser(argv.splice(1)), function (response) {
+			response.text = this.text;
+			console.log("response = " + JSON.stringify(response))
+			this.channel.postMessage(response);
+		});
 	};
 
 	function upload (hook, respond) {
