@@ -41,7 +41,12 @@ module.exports = function Messenger() {
 	};
 
 	function clearById(messageId) {
+		var result = false;
 		var message = findById(messageId);
-		clearInterval(message.timer);
+		if (message) {
+			result = true;
+			clearInterval(message.timer);
+		}
+		return result
 	}
 }

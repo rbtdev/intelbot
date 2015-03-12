@@ -1,11 +1,11 @@
 var data = require('../data/data');
 var str2argv = require('string-argv');
 var argvParser = require('minimist');
-var Messenger = require('messenger');
+var Messenger = require('./messenger');
 
 module.exports = function Brain() {
 	this.exec = exec;
-	this.messenger = new Messenger();
+	var messenger = new Messenger();
 
 	function Attachment (link) {
 		this.fallback = link.name;
@@ -53,36 +53,49 @@ module.exports = function Brain() {
 		var errorMessage = null;
 		console.log("args = " + JSON.stringify(args))
 		var attachments = [];
-		var text = args.m?args.m:"";
-		var location = args.l;
-		args.r = args.r?parseInt(args.r):0;
-		var repeat = isNaN(args.r)?0:args.r;
-		if ((args.r) && (repeat < 10)) {
-			respond({text: "Repeat interval must be greater than 10min"});
+		if (args._.length) {
+			var messageId = args._[0];
+			if (messenger.clearById(messageId)) {
+				respond({text: "Message " + messageId + " cleared."})
+			}
+			else {
+				respond({text: "No message with id = " + messageId + " was found."})
+			}
 		}
 		else {
-			var start = args.s;
-			var end = args.e;
-			var commandStr = "";
-			if (location) {
-				var commandStr = "find " + location;
+			var text = args.m?args.m:"";
+			var location = args.l;
+			args.r = args.r?parseInt(args.r):0;
+			var repeat = isNaN(args.r)?0:args.r;
+			if ((args.r) && (repeat < 10)) {
+				respond({text: "Repeat interval must be greater than 10min"});
 			}
-			var message = this.messenger.createMessage({
-				text: "To cancel this message type `@intel motd`" + message.id + "\n" + "*" + text + "*",
-				interval: repeat,
-				command: commandStr,
-				channel: channel,
-				cb: sendMotd
-			});
+			else {
+				var start = args.s;
+				var end = args.e;
+				var commandStr = "";
+				if (location) {
+					var commandStr = "find " + location;
+				}
+				var message = messenger.createMessage({
+					text: text,
+					interval: repeat,
+					command: commandStr,
+					channel: channel,
+					cb: sendMotd
+				});
+				sendMotd.bind(message)();
+			}
 		}
 	};
 
 	function sendMotd() {
-		var argv = str2argv.parseArgsStringToArgv(this.commandStr);
+		var argv = str2argv.parseArgsStringToArgv(this.command);
+		var message = this;
 		find(argvParser(argv.splice(1)), function (response) {
-			response.text = this.text;
+			response.text = "To cancel this message type `@intel motd " + message.id + "`\n" + "*" + message.text + "*";
 			console.log("response = " + JSON.stringify(response))
-			this.channel.postMessage(response);
+			message.channel.postMessage(response);
 		});
 	};
 
