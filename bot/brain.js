@@ -54,12 +54,26 @@ module.exports = function Brain() {
 		console.log("args = " + JSON.stringify(args))
 		var attachments = [];
 		if (args._.length) {
-			var messageId = args._[0];
-			if (messenger.clearById(messageId)) {
-				respond({text: "Message " + messageId + " cleared."})
-			}
-			else {
-				respond({text: "No message with id = " + messageId + " was found."})
+			var command = args._[0].toLowerCase();
+			switch (command) {
+				case 'stop':
+					if (args._.length > 1) {
+						var messageId = args._[1];
+						if (messenger.clearById(messageId)) {
+							respond({text: "Message " + messageId + " cleared."})
+						}
+						else {
+							respond({text: "No message with id = " + messageId + " was found."})
+						}
+					}
+					else {
+						respond({text: "Please specify a message ID."});
+					}
+				break;
+				case 'list':
+				break;
+				case 'help':
+				break
 			}
 		}
 		else {
