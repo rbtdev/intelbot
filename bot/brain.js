@@ -67,8 +67,8 @@ module.exports = function Brain() {
 			var location = args.l;
 			args.r = args.r?parseInt(args.r):0;
 			var repeat = isNaN(args.r)?0:args.r;
-			if ((args.r) && (repeat < 10)) {
-				respond({text: "Repeat interval must be greater than 10min"});
+			if ((args.r) && (repeat < 1)) {
+				respond({text: "Repeat interval must be greater than 1 min"});
 			}
 			else {
 				var start = args.s;
@@ -79,7 +79,7 @@ module.exports = function Brain() {
 				}
 				var message = messenger.createMessage({
 					text: text,
-					interval: repeat,
+					interval: repeat*60,
 					command: commandStr,
 					channel: channel,
 					cb: sendMotd
