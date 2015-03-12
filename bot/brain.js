@@ -54,12 +54,34 @@ module.exports = function Brain() {
 		console.log("args = " + JSON.stringify(args))
 		var attachments = [];
 		if (args._.length) {
-			var messageId = args._[0];
-			if (messenger.clearById(messageId)) {
-				respond({text: "Message " + messageId + " cleared."})
-			}
-			else {
-				respond({text: "No message with id = " + messageId + " was found."})
+			var command = args._[0].toLowerCase();
+			switch (command) {
+				case 'stop':
+					if (args._.length > 1) {
+						var messageId = args._[1];
+						if (messenger.clearById(messageId)) {
+							respond({text: "Message " + messageId + " cleared."})
+						}
+						else {
+							respond({text: "No message with id = " + messageId + " was found."})
+						}
+					}
+					else {
+						respond({text: "Please specify a message ID."});
+					}
+				break;
+				case 'list':
+					var messages = messenger.messages();
+					messages.forEach(function (message) {
+						this.fallback = message.text;
+						this.text = "*Message:*" + message.text + "\n"
+						this.text += ""
+						this.text =  "<"+ link.intelUrl + "|Intel Map>" + "   <" + link.mapsUrl + "|Google Map>";
+						this.title = link.name + " - " + link.area + " (" + link.shortCode + ")";					
+					});
+				break;
+				case 'help':
+				break
 			}
 		}
 		else {
@@ -73,7 +95,7 @@ module.exports = function Brain() {
 			else {
 				var start = args.s;
 				var end = args.e;
-				var commandStr = "";
+				var commandStr = null;
 				if (location) {
 					var commandStr = "find " + location;
 				}
@@ -90,13 +112,20 @@ module.exports = function Brain() {
 	};
 
 	function sendMotd() {
-		var argv = str2argv.parseArgsStringToArgv(this.command);
 		var message = this;
-		find(argvParser(argv.splice(1)), function (response) {
-			response.text = "To cancel this message type `@intel motd " + message.id + "`\n" + "*" + message.text + "*";
-			console.log("response = " + JSON.stringify(response))
-			message.channel.postMessage(response);
-		});
+		var responseText = "To cancel this message type `@intel motd stop " + message.id + "`\n" + "*" + message.text + "*";
+		if (message.command) {
+			var argv = str2argv.parseArgsStringToArgv(this.command);
+
+			find(argvParser(argv.splice(1)), function (response) {
+				response.text = responseText;
+				console.log("response = " + JSON.stringify(response))
+				message.channel.postMessage(response);
+			});
+		}
+		else {
+			message.channel.post({text: responseText});
+		}
 	};
 
 	function upload (hook, respond) {
