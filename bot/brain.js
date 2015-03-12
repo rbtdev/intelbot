@@ -107,7 +107,7 @@ module.exports = function Brain() {
 		var argv = str2argv.parseArgsStringToArgv(this.command);
 		var message = this;
 		find(argvParser(argv.splice(1)), function (response) {
-			response.text = "To cancel this message type `@intel motd " + message.id + "`\n" + "*" + message.text + "*";
+			response.text = "To cancel this message type `@intel motd stop " + message.id + "`\n" + "*" + message.text + "*";
 			console.log("response = " + JSON.stringify(response))
 			message.channel.postMessage(response);
 		});
