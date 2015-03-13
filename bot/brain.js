@@ -72,13 +72,21 @@ module.exports = function Brain() {
 				break;
 				case 'list':
 					var messages = messenger.messages();
+					var attachments = [];
 					messages.forEach(function (message) {
-						this.fallback = message.text;
-						this.text = "*Message:*" + message.text + "\n"
-						this.text += ""
-						this.text =  "<"+ link.intelUrl + "|Intel Map>" + "   <" + link.mapsUrl + "|Google Map>";
-						this.title = link.name + " - " + link.area + " (" + link.shortCode + ")";					
+						var text = ""
+						text += '*Text:*' + message.text + '\n';
+						text += '*Interval:*' + message.interval + '\n';
+						text += '*Command:*' + message.command;
+						var attachment = {
+							title: message.text,
+							text: text,
+							fallback: message.text,
+							mrkdwn_in: ["text"]
+						}
+						attachments.push(attachment);				
 					});
+					respond({text: "List of messages:", attachments: attachments})
 				break;
 				case 'help':
 				break
@@ -89,8 +97,8 @@ module.exports = function Brain() {
 			var location = args.l;
 			args.r = args.r?parseInt(args.r):0;
 			var repeat = isNaN(args.r)?0:args.r;
-			if ((args.r) && (repeat < 10)) {
-				respond({text: "Repeat interval must be greater than 10min"});
+			if ((args.r) && (repeat < 1)) {
+				respond({text: "Repeat interval must be greater than 1 min"});
 			}
 			else {
 				var start = args.s;
@@ -101,7 +109,7 @@ module.exports = function Brain() {
 				}
 				var message = messenger.createMessage({
 					text: text,
-					interval: repeat,
+					interval: repeat*60,
 					command: commandStr,
 					channel: channel,
 					cb: sendMotd
