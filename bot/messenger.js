@@ -18,8 +18,10 @@ module.exports = function Messenger() {
 		this.channel = options.channel;
 		this.command = options.command;
 		this.cb = options.cb;
+		this.active = false;
 		if (this.cb && this.interval > 1) {
 			this.timer = setInterval(this.cb.bind(this), this.interval*1000);
+			this.active = true;
 		}
 	};
 
@@ -30,12 +32,14 @@ module.exports = function Messenger() {
 	};
 
 	function getMessages() {
-		return messages;
+		return messages.filter(function (message) {
+			return (message.active);
+		});
 	};
 
 	function findById(messageId) {
 		var found = messages.filter(function(message) {
-    		return message.id == messageId;
+    		return ((message.id == messageId) && (message.active));
     	});
     	return found.length?found[0]:null;
 	};
@@ -46,6 +50,7 @@ module.exports = function Messenger() {
 		if (message) {
 			result = true;
 			clearInterval(message.timer);
+			message.active = false;
 		}
 		return result
 	}
