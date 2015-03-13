@@ -86,8 +86,8 @@ module.exports = function Brain() {
 			                    value: message.text,
 			                    short: true
 			                },		                {
-			                    title: "Interval",
-			                    value: message.interval,
+			                    title: "Interval (min)",
+			                    value: message.interval/60,
 			                    short: true
 			                },			                {
 			                    title: "Command",
@@ -96,7 +96,7 @@ module.exports = function Brain() {
 			                }			                
             			];
 						var attachment = {
-							title: message.text,
+							title: "Message details:",
 							text: text,
 							fallback: message.text,
 							fields: fields,
