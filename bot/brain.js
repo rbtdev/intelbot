@@ -75,13 +75,31 @@ module.exports = function Brain() {
 					var attachments = [];
 					messages.forEach(function (message) {
 						var text = ""
-						text += '*Text:*' + message.text + '\n';
-						text += '*Interval:*' + message.interval + '\n';
-						text += '*Command:*' + message.command;
+						var fields = [
+			                {
+			                    title: "ID",
+			                    value: message.id,
+			                    short: true
+			                },
+			                {
+			                    title: "Text",
+			                    value: message.text,
+			                    short: true
+			                },		                {
+			                    title: "Interval",
+			                    value: message.interval,
+			                    short: true
+			                },			                {
+			                    title: "Command",
+			                    value: message.command,
+			                    short: true
+			                }			                
+            			];
 						var attachment = {
 							title: message.text,
 							text: text,
 							fallback: message.text,
+							fields: fields,
 							mrkdwn_in: ["text"]
 						}
 						attachments.push(attachment);				
