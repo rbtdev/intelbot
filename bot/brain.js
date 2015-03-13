@@ -2,10 +2,12 @@ var data = require('../data/data');
 var str2argv = require('string-argv');
 var argvParser = require('minimist');
 var Messenger = require('./messenger');
+var EventManager = require('./events');
 
 module.exports = function Brain() {
 	this.exec = exec;
 	var messenger = new Messenger();
+	var eventMgr = new EventManager();
 
 	function Attachment (link) {
 		this.fallback = link.name;
@@ -49,7 +51,7 @@ module.exports = function Brain() {
 		});
 	};
 
-	function motd (hook, args,channel, respond) {
+	function motd (args,channel, respond) {
 		var errorMessage = null;
 		console.log("args = " + JSON.stringify(args))
 		var attachments = [];
@@ -198,10 +200,13 @@ module.exports = function Brain() {
 				find(command.args, respond);
 			break;
 			case "motd":
-				motd(hook, command.args, channel, respond);
+				motd(command.args, channel, respond);
 			break;
 			case "upload":
 				upload(hook, respond);
+			break;
+			case "event":
+				eventMgr.exec(command.args, channel, respond);
 			break;
 			default:
 				help(command.args, respond);
