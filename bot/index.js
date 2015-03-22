@@ -38,6 +38,7 @@ function Bot (token) {
 		var type = message.type;
 		var channel = this.slack.getChannelGroupOrDMByID(message.channel);
 		var user = this.slack.getUserByID(message.user);
+		console.log("USER Object = " + user)
 		console.log("USER = " + message.user);
 		var time = message.ts;
 		var text = message.text;
@@ -51,7 +52,7 @@ function Bot (token) {
 			) {
 			var _this = this;
 			message.text = upload?"@" + this.slack.self.id + "> upload":message.text;
-			this.brain.exec(message, channel, function (response) {
+			this.brain.exec(user, message, channel, function (response) {
 				channel.postMessage(response);
 				console.log('@%s responded with "%s"', _this.slack.self.name, response);
 			});

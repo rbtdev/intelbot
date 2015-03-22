@@ -185,7 +185,7 @@ module.exports = function Brain() {
 		};
 	};
 
-	function exec (hook, channel, respond) {
+	function exec (user, hook, channel, respond) {
 		console.log("hook = " + JSON.stringify(hook))
 		//data.load("https://docs.google.com/spreadsheets/d/1GI580TI29HL05Omegqb-HqHczU9sAY5XAgY9G-h9Eqs/pubhtml")
 		var command = parse(hook);
@@ -200,13 +200,15 @@ module.exports = function Brain() {
 				find(command.args, respond);
 			break;
 			case "motd":
+			case "message":
 				motd(command.args, channel, respond);
 			break;
 			case "upload":
 				upload(hook, respond);
 			break;
 			case "event":
-				eventMgr.exec(command.args, channel, respond);
+			case "events":
+				eventMgr.exec(user, command.args, channel, respond);
 			break;
 			default:
 				help(command.args, respond);
